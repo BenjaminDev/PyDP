@@ -68,6 +68,7 @@ RUN cp -f ./bazel-bin/src/bindings/_pydp.so ./pydp && \
     rm -rf dist/ && \
     pipenv run python setup.py bdist_wheel && \
     pipenv install dist/*.whl 
+    # pip install dist/*.whl #TODO: See why one is installing outside of virtual env
 
 # This `activates` the virtual env
 ENV VIRTUAL_ENV=$PROJECT_DIR/.venv
