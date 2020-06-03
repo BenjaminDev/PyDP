@@ -1,6 +1,6 @@
 # Pull base image.
-ARG python-version
-FROM python:${python-version}-slim-buster
+ARG python_version
+FROM python:${python_version}-slim-buster
 
 # must be redefined after FROM
 ARG PYTHON_VERSION=$PYTHON_VERSION 
