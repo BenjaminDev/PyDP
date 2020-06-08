@@ -32,13 +32,11 @@ RUN apt-get update && \
     pkg-config \
     zlib1g-dev
 
-# Download and Install Bazel
-RUN wget ${BAZEL_DOWNLOAD_URL}/${BAZEL_VERSION}/${BAZEL_INSTALLER} && \
-    chmod +x ${BAZEL_INSTALLER} && ./${BAZEL_INSTALLER} --user && rm ${BAZEL_INSTALLER}
-
-# Update pip and setuptools and install pipenv
-RUN pip install --upgrade pip setuptools wheel && \
-    pip install pipenv
+# get third-party dependencies
+WORKDIR /tmp/third_party
+# TODO: peg this dependency to particular version. Can pass args in for latest or stable etc
+RUN git clone https://github.com/google/differential-privacy.git 
+RUN pip3 install pipenv
 
 # Change working dir
 WORKDIR ${PROJECT_DIR}
@@ -66,7 +64,7 @@ RUN pipenv --python ${PYTHON_VERSION} && \
 
 RUN cp -f ./bazel-bin/src/bindings/pydp.so ./pydp && \
     rm -rf dist/ && \
-    pipenv run python3 setup.py bdist_wheel && \
+    pipenv run python setup.py bdist_wheel && \
     pipenv install dist/*.whl
 
 # This `activates` the virtual env
