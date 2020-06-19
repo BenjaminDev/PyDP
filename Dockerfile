@@ -12,6 +12,7 @@ ARG BAZEL_DOWNLOAD_URL=https://github.com/bazelbuild/bazel/releases/download
 ENV HOME=/root
 ENV PROJECT_DIR="${HOME}/PyDP"
 ENV PATH="/root/bin:${PATH}"
+ENV DP_SHA="b7f4c39d9f73d67b34cdbd1b8483e5f72072fc73"
 
 # Define working directory
 WORKDIR ${HOME}
@@ -50,6 +51,12 @@ COPY . ${PROJECT_DIR}
 # and will needed to be updated in keeping with that (a rather tedious way)
 # Get google dp dependency. Rather copy the thrid party deps as it's a cloned submodule
 # COPY ./third_party third_party
+# Get google dp dependency
+RUN mkdir -p third_party && \
+    cd third_party && \
+    git clone https://github.com/google/differential-privacy.git && \
+    cd differential-privacy && \
+    git checkout ${DP_SHA}
 
 # RUN mkdir -p third_party && \
 #     cd third_party && \
