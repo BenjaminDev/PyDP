@@ -50,13 +50,14 @@ COPY . ${PROJECT_DIR}
 # Either we clone it here as was done but then it should be @e819e03 to match the submodule 
 # and will needed to be updated in keeping with that (a rather tedious way)
 # Get google dp dependency. Rather copy the thrid party deps as it's a cloned submodule
-# COPY ./third_party third_party
+COPY ./third_party third_party
 # Get google dp dependency
-RUN mkdir -p third_party && \
-    cd third_party && \
-    git clone https://github.com/google/differential-privacy.git && \
-    cd differential-privacy && \
-    git checkout ${DP_SHA}
+# RUN rm -rf third_party && \
+#     mkdir -p third_party && \
+#     cd third_party && \
+#     git clone https://github.com/google/differential-privacy.git && \
+#     cd differential-privacy && \
+#     git checkout ${DP_SHA}
 
 # RUN mkdir -p third_party && \
 #     cd third_party && \
