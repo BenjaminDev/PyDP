@@ -59,12 +59,6 @@ COPY ./third_party third_party
 #     cd differential-privacy && \
 #     git checkout ${DP_SHA}
 
-# RUN mkdir -p third_party && \
-#     cd third_party && \
-#     git clone https://github.com/google/differential-privacy.git
-
-# Or we just copy it in and ensure the CI/CD clone the repo and the submodule.
-# Then all keeps in sync.
 # Remove unused java code
 RUN rm -rf third_party/differential-privacy/java && \ 
     rm -rf third_party/differential-privacy/examples/java
