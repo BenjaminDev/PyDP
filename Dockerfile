@@ -76,7 +76,7 @@ ENV PIPENV_VENV_IN_PROJECT=true
 RUN pipenv --python ${PYTHON_VERSION} && \
     pipenv run bazel build src/python:bindings_test  --verbose_failures
 
-RUN cp -f ./bazel-bin/src/bindings/pydp.so ./pydp && \
+RUN cp ./bazel-bin/src/bindings/pydp.so ./pydp && \
     rm -rf dist/ && \
     pipenv run python setup.py bdist_wheel && \
     pipenv install dist/*.whl 
