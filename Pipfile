@@ -13,3 +13,4 @@ twine = "*"
 coverage = "*"
 
 [packages]
+python-dp = {path = "./dist/python_dp-0.1.4-cp37-cp37m-linux_x86_64.whl"}

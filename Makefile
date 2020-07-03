@@ -82,3 +82,11 @@ dist: clean ## builds source and wheel package
 
 install: clean ## install the package to the active Python's site-packages
 	${python_var} setup.py install
+
+reinstall: clean
+	pipenv run bazel build src/python:bindings_test  --verbose_failures
+	cp ./bazel-bin/src/bindings/pydp.so ./pydp
+	rm -rf dist/
+	rm -f Pipfile.lock 
+	pipenv run python setup.py bdist_wheel
+	pipenv install dist/*.whl  --skip-lock
