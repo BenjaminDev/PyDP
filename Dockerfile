@@ -1,6 +1,6 @@
-# Pull base image.
-ARG python_version
-FROM python:${python_version}-slim-buster
+# Pull base image
+ARG PYTHON_VERSION=3.7
+FROM python:${PYTHON_VERSION}-slim-buster
 
 # must be redefined after FROM
 ARG PYTHON_VERSION=$PYTHON_VERSION 
@@ -32,11 +32,13 @@ RUN apt-get update && \
     pkg-config \
     zlib1g-dev
 
-# get third-party dependencies
-WORKDIR /tmp/third_party
-# TODO: peg this dependency to particular version. Can pass args in for latest or stable etc
-RUN git clone https://github.com/google/differential-privacy.git 
-RUN pip3 install pipenv
+# Download and Install Bazel
+RUN wget ${BAZEL_DOWNLOAD_URL}/${BAZEL_VERSION}/${BAZEL_INSTALLER} && \
+    chmod +x ${BAZEL_INSTALLER} && ./${BAZEL_INSTALLER} --user && rm ${BAZEL_INSTALLER}
+
+# Update pip and setuptools and install pipenv
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install pipenv
 
 # Change working dir
 WORKDIR ${PROJECT_DIR}
@@ -44,18 +46,13 @@ WORKDIR ${PROJECT_DIR}
 # Copy local source over
 COPY . ${PROJECT_DIR}
 
-# Dealing with 3rd party code one needs to pin it to a version or a SHA.
-# Either we clone it here as was done but then it should be @e819e03 to match the submodule 
-# and will needed to be updated in keeping with that (a rather tedious way)
-# Get google dp dependency. Rather copy the thrid party deps as it's a cloned submodule
-# COPY ./third_party third_party
+# Get google dp dependency
+RUN mkdir -p third_party && \
+    cd third_party && \
+    git clone https://github.com/google/differential-privacy.git && \
+    cd differential-privacy && \
+    git checkout ${DP_SHA}
 
-# RUN mkdir -p third_party && \
-#     cd third_party && \
-#     git clone https://github.com/google/differential-privacy.git
-
-# Or we just copy it in and ensure the CI/CD clone the repo and the submodule.
-# Then all keeps in sync.
 # Remove unused java code
 RUN rm -rf third_party/differential-privacy/java && \ 
     rm -rf third_party/differential-privacy/examples/java
@@ -70,7 +67,8 @@ RUN pipenv --python ${PYTHON_VERSION} && \
 RUN cp -f ./bazel-bin/src/bindings/pydp.so ./pydp && \
     rm -rf dist/ && \
     pipenv run python setup.py bdist_wheel && \
-    pipenv install dist/*.whl
+    pipenv install dist/*.whl 
+    # pip install dist/*.whl #TODO: See why one is installing outside of virtual env
 
 # This `activates` the virtual env
 ENV VIRTUAL_ENV=$PROJECT_DIR/.venv
