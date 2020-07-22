@@ -5,7 +5,7 @@
 #include "algorithms/distributions.h"
 
 using namespace std;
-namespace py = pybind11;
+namespace py=pybind11;
 namespace dpi = differential_privacy::internal;
 
 void declareLaplaceDistribution(py::module &m) {
