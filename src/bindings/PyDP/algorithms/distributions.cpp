@@ -8,17 +8,22 @@ using namespace std;
 namespace py = pybind11;
 namespace dpi = differential_privacy::internal;
 
-void declareLaplaceDistribution(py::module& m) {
-  py::class_<dpi::LaplaceDistribution> laplace_dist(m, "LaplaceDistribution");
-  laplace_dist.attr("__module__") = "pydp";
-  laplace_dist.def(py::init<double>())
-      .def("get_uniform_double", &dpi::LaplaceDistribution::GetUniformDouble)
-      .def("sample",
-           (double (dpi::LaplaceDistribution::*)()) & dpi::LaplaceDistribution::Sample)
-      .def("sample", (double (dpi::LaplaceDistribution::*)(double)) &
-                         dpi::LaplaceDistribution::Sample)
-      .def("get_diversity", &dpi::LaplaceDistribution::GetDiversity)
-      .def("cdf", &dpi::LaplaceDistribution::cdf);
+void declareLaplaceDistribution(py::module &m) {
+    py::class_<dpi::LaplaceDistribution> laplace_dist(m, "LaplaceDistribution");
+    laplace_dist.attr("__module__") = "pydp";
+    laplace_dist.def(py::init<double, double>(), py::arg("epsilon") = 0., py::arg("sensitivity"))
+        .def("get_uniform_double",
+             &dpi::LaplaceDistribution::GetUniformDouble,
+             "Returns a uniform random integer of in range [0, 2^53).")
+        .def("sample",
+             py::overload_cast<double>(&dpi::LaplaceDistribution::Sample),
+             py::arg("scale") = 1.0,
+             "Samples the Laplacian with distribution Lap(scale*b)")
+        .def("get_diversity",
+             &dpi::LaplaceDistribution::GetDiversity,
+             "Returns the parameter defining this distribution, often labeled b.");
+
+    laplace_dist.attr("__doc__") = "Allows sampling from a secure laplace distribution.";
 }
 
 void declareGaussianDistribution(py::module& m) {
