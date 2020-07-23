@@ -30,7 +30,8 @@ RUN apt-get update && \
     build-essential \
     python3-distutils \
     pkg-config \
-    zlib1g-dev
+    zlib1g-dev\
+    clang-format
 
 # Download and Install Bazel
 RUN wget ${BAZEL_DOWNLOAD_URL}/${BAZEL_VERSION}/${BAZEL_INSTALLER} && \
