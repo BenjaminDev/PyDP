@@ -1,4 +1,4 @@
-# Introduction
+# Introduction 
 
 PyDP is a Python wrapper for Google's [Differencial Privacy](https://github.com/google/differential-privacy) project. The library provides a set of ε-differentially private algorithms, which can be used to produce aggregate statistics over numeric data sets containing private or sensitive information.
 
