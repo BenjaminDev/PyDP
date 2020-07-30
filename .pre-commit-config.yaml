@@ -1,0 +1,13 @@
+repos:
+  - repo: local
+    hooks:
+      - &custom
+        id: clang-format
+        name: clang-format
+        entry: clang-format
+        language: system
+        types: [file]
+        files: \.(c|cc|cxx|cpp|h|hpp|hxx)$
+      - <<: *custom
+        args: ["-i","-style=file"]
+      
