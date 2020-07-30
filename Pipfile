@@ -1,0 +1,16 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+setuptools = "*"
+bumpversion = "==0.5.3"
+pytest = "*"
+black = "*"
+twine = "*"
+pre-commit = "*"
+sphinx = "*"
+clang-format = "*"
+
+[packages]
