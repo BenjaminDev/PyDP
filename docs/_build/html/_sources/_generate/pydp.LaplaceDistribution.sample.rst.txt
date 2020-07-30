@@ -1,6 +1,0 @@
-pydp.LaplaceDistribution.sample
-===============================
-
-.. currentmodule:: pydp
-
-.. automethod:: LaplaceDistribution.sample
