@@ -11,5 +11,6 @@ black = "*"
 twine = "*"
 pre-commit = "*"
 sphinx = "*"
+clang-format = "*"
 
 [packages]
