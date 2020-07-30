@@ -1,0 +1,6 @@
+pydp.LaplaceDistribution.get\_uniform\_double
+=============================================
+
+.. currentmodule:: pydp
+
+.. automethod:: LaplaceDistribution.get_uniform_double

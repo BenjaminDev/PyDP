@@ -1,0 +1,6 @@
+pydp.LaplaceDistribution.get\_diversity
+=======================================
+
+.. currentmodule:: pydp
+
+.. automethod:: LaplaceDistribution.get_diversity
