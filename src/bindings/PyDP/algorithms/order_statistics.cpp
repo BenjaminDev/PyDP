@@ -4,7 +4,8 @@
 
 #include "../pydp_lib/casting.hpp"       // our caster helper library
 #include "../pydp_lib/helper_class.hpp"  //  Dummy helder class
-
+#include "../pydp_lib/orderstatistic_builder.hpp"
+#include "algorithms/order-statistics.h"
 #include "pybind11/complex.h"
 #include "pybind11/functional.h"
 #include "pybind11/pybind11.h"
@@ -13,6 +14,13 @@
 using namespace std;
 
 namespace py = pybind11;
+namespace dp = differential_privacy;
+
+template <typename T, class OrderStat>
+void declareOrderStat(py::module& m) {
+  using builder = typename dp::python::ContinuousBuilder<T, OrderStat>;
+  builder().declare(m);
+}
 
 class MaxDummy : public Dummy {
  public:
@@ -23,14 +31,14 @@ class MaxDummy : public Dummy {
   }
 };
 
-class MinDummy : public Dummy {
- public:
-  using Dummy::Dummy;
+// class MinDummy : public Dummy {
+//  public:
+//   using Dummy::Dummy;
 
-  double Result(py::list l, double privacy_budget) override {
-    return Result_Min(obj, l, privacy_budget);
-  }
-};
+//   double Result(py::list l, double privacy_budget) override {
+//     return Result_Min(obj, l, privacy_budget);
+//   }
+// };
 
 class MedianDummy : public Dummy {
  public:
@@ -75,19 +83,19 @@ void declareMax(py::module& m) {
                    &MaxDummy::set_linf_sensitivity);
 }
 
-void declareMin(py::module& m) {
-  py::class_<MinDummy> bld(m, "Min");
-  bld.attr("__module__") = "pydp";
-  bld.def(py::init<double, int, int>(), py::return_value_policy::reference,
-          py::call_guard<pybind11::gil_scoped_release>());
-  bld.def(py::init<double>(), py::return_value_policy::reference,
-          py::call_guard<pybind11::gil_scoped_release>());
-  bld.def("result", &MinDummy::Result);
-  bld.def_property("l0_sensitivity", &MinDummy::get_l0_sensitivity,
-                   &MinDummy::set_l0_sensitivity);
-  bld.def_property("linf_sensitivity", &MinDummy::get_linf_sensitivity,
-                   &MinDummy::set_linf_sensitivity);
-}
+// void declareMin(py::module& m) {
+//   py::class_<MinDummy> bld(m, "Min");
+//   bld.attr("__module__") = "pydp";
+//   bld.def(py::init<double, int, int>(), py::return_value_policy::reference,
+//           py::call_guard<pybind11::gil_scoped_release>());
+//   bld.def(py::init<double>(), py::return_value_policy::reference,
+//           py::call_guard<pybind11::gil_scoped_release>());
+//   bld.def("result", &MinDummy::Result);
+//   bld.def_property("l0_sensitivity", &MinDummy::get_l0_sensitivity,
+//                    &MinDummy::set_l0_sensitivity);
+//   bld.def_property("linf_sensitivity", &MinDummy::get_linf_sensitivity,
+//                    &MinDummy::set_linf_sensitivity);
+// }
 
 void declareMedian(py::module& m) {
   py::class_<MedianDummy> bld(m, "Median");
@@ -121,7 +129,7 @@ void declarePercentile(py::module& m) {
 
 void init_algorithms_order_statistics(py::module& m) {
   declareMax(m);
-  declareMin(m);
+  declareOrderStat<int, dp::continuous::Min<int>>(m);
   declareMedian(m);
   declarePercentile(m);
 }

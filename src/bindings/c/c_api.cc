@@ -206,38 +206,38 @@ int64_t Result_Max(BoundedFunctionHelperObject* config, pybind11::list l,
 
 // Min
 
-int64_t Result_Min(BoundedFunctionHelperObject* config, pybind11::list l,
-                   double privacy_budget) {
-  base::StatusOr<std::unique_ptr<continuous::Min<int64_t>>> min;
-  if (has_bounds) {
-    min = continuous::Min<int64_t>::Builder()
-              .SetEpsilon(config->epsilon)
-              .SetLower(config->lower_bound)
-              .SetUpper(config->upper_bound)
-              .SetMaxPartitionsContributed(l0_sensitivity)
-              .SetMaxContributionsPerPartition(linf_sensitivity)
-              .Build();
-  } else {
-    min = continuous::Min<int64_t>::Builder()
-              .SetEpsilon(config->epsilon)
-              .SetMaxPartitionsContributed(l0_sensitivity)
-              .SetMaxContributionsPerPartition(linf_sensitivity)
-              .Build();
-  }
-  if (!min.ok()) {
-    throw std::runtime_error(min.status().error_message());
-  } else {
-    for (auto i : l) {
-      min.ValueOrDie()->AddEntry(i.cast<int64_t>());
-    }
-    base::StatusOr<Output> resultf = min.ValueOrDie()->PartialResult(privacy_budget);
-    if (resultf.ok()) {
-      return GetValue<int64_t>(resultf.ValueOrDie());
-    } else {
-      throw std::runtime_error(resultf.status().error_message());
-    }
-  }
-}
+// int64_t Result_Min(BoundedFunctionHelperObject* config, pybind11::list l,
+//                    double privacy_budget) {
+//   base::StatusOr<std::unique_ptr<continuous::Min<int64_t>>> min;
+//   if (has_bounds) {
+//     min = continuous::Min<int64_t>::Builder()
+//               .SetEpsilon(config->epsilon)
+//               .SetLower(config->lower_bound)
+//               .SetUpper(config->upper_bound)
+//               .SetMaxPartitionsContributed(l0_sensitivity)
+//               .SetMaxContributionsPerPartition(linf_sensitivity)
+//               .Build();
+//   } else {
+//     min = continuous::Min<int64_t>::Builder()
+//               .SetEpsilon(config->epsilon)
+//               .SetMaxPartitionsContributed(l0_sensitivity)
+//               .SetMaxContributionsPerPartition(linf_sensitivity)
+//               .Build();
+//   }
+//   if (!min.ok()) {
+//     throw std::runtime_error(min.status().error_message());
+//   } else {
+//     for (auto i : l) {
+//       min.ValueOrDie()->AddEntry(i.cast<int64_t>());
+//     }
+//     base::StatusOr<Output> resultf = min.ValueOrDie()->PartialResult(privacy_budget);
+//     if (resultf.ok()) {
+//       return GetValue<int64_t>(resultf.ValueOrDie());
+//     } else {
+//       throw std::runtime_error(resultf.status().error_message());
+//     }
+//   }
+// }
 
 // Max
 
