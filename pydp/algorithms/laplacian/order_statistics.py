@@ -1,17 +1,17 @@
-from ..algorithm import Algorithm
+from ..algorithm import WrapAlgorithm
 
 
-class Max(Algorithm):
+class Max(WrapAlgorithm):
     pass
 
 
-class Min(Algorithm):
+class Min(WrapAlgorithm):
     pass
 
 
-class Median(Algorithm):
+class Median(WrapAlgorithm):
     pass
 
 
-class Percentile(Algorithm):
+class Percentile(WrapAlgorithm):
     pass
