@@ -1,0 +1,60 @@
+name: Tests
+
+on:
+  push:
+    branches:
+    - master, dev
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pytest:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      # max-parallel: 6
+      matrix:
+        # PyTorch 1.5 is failing on Win and bolts requires torchvision>=0.5
+        os: [ubuntu-20.04, macOS-10.15 , windows-2019]
+        python-version: [3.5, 3.6, 3.7, 3.8]
+
+    # Timeout: https://stackoverflow.com/a/59076067/4521646
+    timeout-minutes: 35
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          submodules: true
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Set environment variables
+      uses: allenevans/set-env@v1.0.0
+      with:
+        PIPENV_DEFAULT_PYTHON_VERSION: ${{ matrix.python-version }}
+    - name: Setup Bazel
+      uses: abhinavsingh/setup-bazel@v3
+    - name: Build PyDP with coverage
+      bazel coverage src/python:bindings_test --verbose_failures    
+      if: runner.os=="Windows"
+      run: |
+        copy bazel-bin\src\bindings\_pydp.so pydp\_pydp.pyd
+      if: runner.os!="Windows"
+      run: |
+        cp -f ./bazel-bin/src/bindings/_pydp.so ./pydp  
+          
+    - name: Setup and Install PyDP
+      run: |
+        python setup.py bdist_wheel
+        pipenv run pip install --force-reinstall dist/*.whl
+    - name: Run tests
+      run: |
+        make run-tests-only
+    - name: Check Python code coverage
+      run: |
+        make check-coverage-python
+    - name: Check C++ code coverage
+      run: |
+        make check-coverage-cpp
