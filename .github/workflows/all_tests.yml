@@ -50,6 +50,7 @@ jobs:
           
     - name: Setup and Install PyDP
       run: |
+        python -m pip install -U wheel setuptools pip
         python setup.py bdist_wheel
         pipenv run pip install --force-reinstall dist/*.whl
     - name: Run tests
