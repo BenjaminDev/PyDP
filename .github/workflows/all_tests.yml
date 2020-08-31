@@ -38,7 +38,7 @@ jobs:
     - name: Build PyDP with coverage
     # removed coverage for now
       run: |
-        bazel src/python:bindings_test --verbose_failures    
+        bazel build src/python:bindings_test --verbose_failures    
     - name: Copy binary to python package(windows)  
       if: runner.os == 'Windows'
       run: |
