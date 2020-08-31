@@ -16,7 +16,7 @@ jobs:
       # max-parallel: 6
       matrix:
         os: [ubuntu-20.04, macOS-10.15 , windows-2019]
-        python-version: [3.5, 3.6, 3.7, 3.8]
+        python-version:  [3.8] #[3.5, 3.6, 3.7,
 
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 35
@@ -36,8 +36,9 @@ jobs:
     - name: Setup Bazel
       uses: abhinavsingh/setup-bazel@v3
     - name: Build PyDP with coverage
+    # removed coverage for now
       run: |
-        bazel coverage src/python:bindings_test --verbose_failures    
+        bazel src/python:bindings_test --verbose_failures    
     - name: Copy binary to python package(windows)  
       if: runner.os == 'Windows'
       run: |
@@ -53,10 +54,10 @@ jobs:
         pipenv run pip install --force-reinstall dist/*.whl
     - name: Run tests
       run: |
-        make run-tests-only
-    - name: Check Python code coverage
-      run: |
-        make check-coverage-python
-    - name: Check C++ code coverage
-      run: |
-        make check-coverage-cpp
+        pipenv run -m pytest tests
+    # - name: Check Python code coverage
+    #   run: |
+    #     make check-coverage-python
+    # - name: Check C++ code coverage
+    #   run: |
+    #     make check-coverage-cpp
