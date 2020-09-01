@@ -51,7 +51,7 @@ jobs:
     - name: Setup and Install PyDP
       run: |
         python -m pip install pipenv
-        pipenv install -U setuptools wheel pytest gcovr coverage
+        pipenv install setuptools wheel pytest gcovr coverage
         pipenv run python setup.py bdist_wheel
         pipenv run python -m pip install --force-reinstall dist/*.whl
     - name: Run tests
