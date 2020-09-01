@@ -18,13 +18,13 @@ class BinaryDistribution(Distribution):
 
 
 def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+    with open(os.path.join(os.path.dirname(__file__), fname), encoding="utf-8") as fp:
+        return fp.read()
 
 
 requirements = []
 
 setup_requirements = []
-
 
 setup(
     author="Chinmay Shah",
